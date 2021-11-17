@@ -1,0 +1,12 @@
+{% if lista_enquetes %}
+<h2>Index: lista de Enquetes.</h2>
+
+
+<ul>
+  {% for enquete in lista_enquetes %}
+  <li>
+    <a href="{% url 'detalhes' enquete.id %}">{{ enquete.titulo }}</a>
+  {% endfor %}
+  </li>
+</ul>
+{% endif %}

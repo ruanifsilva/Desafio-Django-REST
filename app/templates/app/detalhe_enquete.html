@@ -1,0 +1,13 @@
+<h2>{{ enquete.titulo }}</h2>
+<br>
+<h1>{{ enquete.texto }}</h1>
+
+
+<form action="{% url 'resultado_enquete' enquete.id %}" method="post">
+{% csrf_token %}
+{% for resposta in enquete.resposta_set.all %}
+    <input type="radio" name="resposta" value="{{ resposta.id }}" />
+    <label >{{ resposta.opcao }}</label><br />
+{% endfor %}
+<input type="submit" value="Votar" />
+</form>
