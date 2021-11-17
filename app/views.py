@@ -19,7 +19,7 @@ def resultado_enquetes(request, detalhe_id):
         return render(request, 'app/delhate_enquete.html')
 
     resposta = request.POST.get('resposta')
-    resposta_selecionada = enquete.resposta_set.get(id=resposta)
+    resposta_selecionada = enquete.respostas.get(id=resposta)
     resposta_selecionada.votos += 1
     resposta_selecionada.save()
 
