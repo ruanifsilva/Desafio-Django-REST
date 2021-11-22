@@ -1,10 +1,14 @@
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from django.urls import reverse
 from .models import Enquete, Resposta
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 
+# importações para REST
+
+from django.contrib.auth.models import User
+from rest_framework import viewsets
+from rest_framework import permissions
+from .serializers import EnqueteSerializer, RespostaSerializer
 
 
 class Index(ListView):
@@ -38,3 +42,15 @@ def resultado_enquete(request, detalhe_id):
     resposta_selecionada.save()
 
     return render(request, 'app/resultado_enquete.html', {'enquete': enquete})
+
+
+class EnqueteViewSet(viewsets.ModelViewSet):
+    queryset = Enquete.objects.all().order_by('-titulo')
+    serializer_class = EnqueteSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class RespostaViewSet(viewsets.ModelViewSet):
+    queryset = Resposta.objects.all()
+    serializer_class = RespostaSerializer
+    permission_classes = [permissions.IsAuthenticated]
