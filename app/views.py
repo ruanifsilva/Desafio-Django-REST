@@ -1,18 +1,32 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from .models import Enquete
+from django.urls import reverse
+from .models import Enquete, Resposta
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 
 
-def index(request):
-    lista_enquetes = Enquete.objects.order_by('-titulo')
-    return render(request, 'app/index.html', {'lista_enquetes': lista_enquetes})
+
+class Index(ListView):
+    template_name = 'app/index.html'
+    context_object_name = 'lista_enquetes'
+
+    def get_queryset(self):
+        return Enquete.objects.order_by('-titulo')
 
 
-def detalhes(request, detalhe_id):
-    enquete = get_object_or_404(Enquete, id=detalhe_id)
-    return render(request, 'app/detalhe_enquete.html', {'enquete': enquete})
+class Detalhes(DetailView):
+    model = Enquete
+    template_name = 'app/detalhe_enquete.html'
+    context_object_name = 'enquete'
 
 
-def resultado_enquetes(request, detalhe_id):
+# class ResultadoEnquete(Index):
+#     template_name = 'app/resultado_enquete.html'
+#     context_object_name = 'enquete'
+
+
+def resultado_enquete(request, detalhe_id):
     enquete = get_object_or_404(Enquete, id=detalhe_id)
 
     if request.method != 'POST':
