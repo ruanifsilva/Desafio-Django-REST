@@ -1,3 +1,9 @@
+{% extends 'base.html' %}
+
+{% block titulo %} {{ lista_enquetes.titulo }}  |  {% endblock %}
+
+{% block conteudo %}
+
 <h2>{{ enquete.titulo }}</h2>
 <br>
 <h1>{{ enquete.texto }}</h1>
@@ -11,3 +17,4 @@
 {% endfor %}
 <input type="submit" value="Votar" />
 </form>
+{% endblock %}

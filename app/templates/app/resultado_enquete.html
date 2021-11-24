@@ -1,3 +1,8 @@
+{% extends 'base.html' %}
+
+{% block titulo %} {{ enquete.titulo }}  |  {% endblock %}
+
+{% block conteudo %}
 <h2>{{ enquete.titulo }}</h2>
 <h1>{{ enquete.texto }}</h1>
 
@@ -10,3 +15,4 @@
 <a href="{% url 'detalhes' enquete.id %}">Votar novamente?</a>
 <br>
 <a href="{% url 'index' %}">Escolher outra enquete.</a>
+{% endblock %}

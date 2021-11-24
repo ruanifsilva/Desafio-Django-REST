@@ -1,5 +1,11 @@
+{% extends 'base.html' %}
+
+{% block titulo %} {{ lista_enquetes.titulo }}  |  {% endblock %}
+
+
+{% block conteudo %}
 {% if lista_enquetes %}
-<h2>Index: lista de Enquetes.</h2>
+<h2>lista de Enquetes.</h2>
 
 
 <ul>
@@ -10,3 +16,4 @@
   </li>
 </ul>
 {% endif %}
+{% endblock %}
