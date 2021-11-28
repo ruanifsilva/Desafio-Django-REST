@@ -9,6 +9,9 @@ from django.contrib.auth.models import User
 from rest_framework import viewsets
 from rest_framework import permissions
 from .serializers import EnqueteSerializer, RespostaSerializer
+from django_filters.rest_framework import DjangoFilterBackend
+
+
 
 
 class Index(ListView):
@@ -53,4 +56,4 @@ class EnqueteViewSet(viewsets.ModelViewSet):
 class RespostaViewSet(viewsets.ModelViewSet):
     queryset = Resposta.objects.all()
     serializer_class = RespostaSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]

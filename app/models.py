@@ -9,7 +9,7 @@ class Enquete(models.Model):
 
 
 class Resposta(models.Model):
-    enquete_fk = models.ForeignKey(Enquete, on_delete=models.CASCADE, related_name='respostas')
+    enquete = models.ForeignKey(Enquete, on_delete=models.CASCADE, related_name='respostas',)
     opcao = models.CharField(max_length=200)
     votos = models.IntegerField(default=0)
 
