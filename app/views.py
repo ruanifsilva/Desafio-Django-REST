@@ -1,10 +1,9 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect, reverse
 from .models import Enquete, Resposta
-from django.views.generic.list import ListView
-from django.views.generic.detail import DetailView
+from django.views import generic
+
 
 # importações para REST
-
 from django.contrib.auth.models import User
 from rest_framework import viewsets
 from rest_framework import permissions
@@ -12,9 +11,7 @@ from .serializers import EnqueteSerializer, RespostaSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 
 
-
-
-class Index(ListView):
+class Index(generic.ListView):
     template_name = 'app/index.html'
     context_object_name = 'lista_enquetes'
 
@@ -22,29 +19,34 @@ class Index(ListView):
         return Enquete.objects.order_by('-titulo')
 
 
-class Detalhes(DetailView):
+class Detalhes(generic.DetailView):
     model = Enquete
     template_name = 'app/detalhe_enquete.html'
     context_object_name = 'enquete'
 
 
-# class ResultadoEnquete(Index):
-#     template_name = 'app/resultado_enquete.html'
-#     context_object_name = 'enquete'
+class ResultadoEnquete(generic.DetailView):
+    model = Enquete
+    template_name = 'app/resultado_enquete.html'
+    # context_object_name = 'enquete'
 
 
 def resultado_enquete(request, detalhe_id):
     enquete = get_object_or_404(Enquete, id=detalhe_id)
 
     if request.method != 'POST':
-        return render(request, 'app/delhate_enquete.html')
+        return render(request, 'app/delhate_enquete.html', {'enquete': enquete})
 
     resposta = request.POST.get('resposta')
+
+    if not resposta:
+        return redirect('app:index')
+
     resposta_selecionada = enquete.respostas.get(id=resposta)
     resposta_selecionada.votos += 1
     resposta_selecionada.save()
 
-    return render(request, 'app/resultado_enquete.html', {'enquete': enquete})
+    return redirect(reverse('app:resultado', kwargs={'pk': enquete.id}))
 
 
 class EnqueteViewSet(viewsets.ModelViewSet):

@@ -11,7 +11,7 @@
 <ul>
   {% for enquete in lista_enquetes %}
   <li>
-    <a href="{% url 'detalhes' enquete.id %}">{{ enquete.titulo }}</a>
+    <a href="{% url 'app:detalhes' enquete.id %}">{{ enquete.titulo }}</a>
   {% endfor %}
   </li>
 </ul>

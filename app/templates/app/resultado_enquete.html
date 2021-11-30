@@ -12,7 +12,7 @@
 {% endfor %}
 </ul>
 
-<a href="{% url 'detalhes' enquete.id %}">Votar novamente?</a>
+<a href="{% url 'app:detalhes' enquete.id %}">Votar novamente?</a>
 <br>
-<a href="{% url 'index' %}">Escolher outra enquete.</a>
+<a href="{% url 'app:index' %}">Escolher outra enquete.</a>
 {% endblock %}
