@@ -1,56 +1,49 @@
-from django.shortcuts import render, get_object_or_404, redirect, reverse
-from .models import Enquete, Resposta
+from django.contrib import messages
+from django.shortcuts import get_object_or_404, redirect, reverse
 from django.views import generic
-
-
-# importações para REST
-from django.contrib.auth.models import User
-from rest_framework import viewsets
-from rest_framework import permissions
-from .serializers import EnqueteSerializer, RespostaSerializer
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import permissions, viewsets
+
+from .models import Enquete, Resposta
+from .serializers import EnqueteSerializer, RespostaSerializer
 
 
-class Index(generic.ListView):
-    template_name = 'app/index.html'
-    context_object_name = 'lista_enquetes'
-
-    def get_queryset(self):
-        return Enquete.objects.order_by('-titulo')
-
-
-class Detalhes(generic.DetailView):
+class EnqueteList(generic.ListView):
     model = Enquete
-    template_name = 'app/detalhe_enquete.html'
-    context_object_name = 'enquete'
+    template_name = "app/index.html"
+    context_object_name = "lista_enquetes"
+    ordering = ["-titulo"]
 
 
-class ResultadoEnquete(generic.DetailView):
+class EnqueteDetail(generic.DetailView):
     model = Enquete
-    template_name = 'app/resultado_enquete.html'
-    # context_object_name = 'enquete'
+    template_name = "app/detalhe_enquete.html"
+    context_object_name = "enquete"
 
 
-def resultado_enquete(request, detalhe_id):
-    enquete = get_object_or_404(Enquete, id=detalhe_id)
+class ResultadoEnqueteDetail(generic.DetailView):
+    model = Enquete
+    template_name = "app/resultado_enquete.html"
 
-    if request.method != 'POST':
-        return render(request, 'app/delhate_enquete.html', {'enquete': enquete})
 
-    resposta = request.POST.get('resposta')
+class ContarVotoView(generic.View):
+    def post(self, request, **kwargs):
+        enquete = get_object_or_404(Enquete, id=kwargs.get("pk"))
+        resposta = request.POST.get("resposta")
 
-    if not resposta:
-        return redirect('app:index')
+        if not resposta:
+            messages.info(request, "Vai se fuder sua mula do caralho.")
+            return redirect("app:detalhes", pk=enquete.id)
 
-    resposta_selecionada = enquete.respostas.get(id=resposta)
-    resposta_selecionada.votos += 1
-    resposta_selecionada.save()
+        resposta_selecionada = enquete.respostas.get(id=resposta)
+        resposta_selecionada.votos += 1
+        resposta_selecionada.save()
 
-    return redirect(reverse('app:resultado', kwargs={'pk': enquete.id}))
+        return redirect(reverse("app:resultado", kwargs={"pk": enquete.id}))
 
 
 class EnqueteViewSet(viewsets.ModelViewSet):
-    queryset = Enquete.objects.all().order_by('-titulo')
+    queryset = Enquete.objects.all().order_by("-titulo")
     serializer_class = EnqueteSerializer
     permission_classes = [permissions.IsAuthenticated]
 

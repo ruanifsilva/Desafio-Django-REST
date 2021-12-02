@@ -9,7 +9,7 @@
 <h1>{{ enquete.texto }}</h1>
 
 
-<form action="{% url 'app:resultado_enquete' enquete.id %}" method="post">
+<form action="{% url 'app:votar' enquete.id %}" method="post">
 {% csrf_token %}
 {% for resposta in enquete.respostas.all %}
     <input type="radio" name="resposta" value="{{ resposta.id }}" />
